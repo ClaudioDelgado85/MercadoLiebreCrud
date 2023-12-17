@@ -13,7 +13,14 @@ const mainController = {
 		res.render('index',{visited,inSale,toThousand});
 	},
 	search: (req, res) => {
-		// Do the magic
+		const busqueda = req.query.keywords;
+		const resultado= [];
+		products.forEach(element => {
+			if (element.name.toLowerCase().includes(busqueda.toLowerCase())){
+				resultado.push(element);
+			}
+		});
+		res.render('results',{resultado,toThousand,busqueda})
 	},
 };
 
