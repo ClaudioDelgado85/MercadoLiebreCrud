@@ -16,11 +16,11 @@ const mainController = {
 		const busqueda = req.query.keywords;
 		const resultado= [];
 		products.forEach(element => {
-			if (element.name.toLowerCase().includes(busqueda.toLowerCase())){
+			if (element.name.includes(busqueda)){
 				resultado.push(element);
 			}
 		});
-		res.render('results',{resultado,toThousand,busqueda})
+		res.render('results',{resultado,busqueda})
 	},
 };
 
