@@ -62,9 +62,17 @@ const controller = {
 	},
 	// Update - Method to update
 	update: (req, res) => {
-		const {id}=req.params;
+		id = +req.params.id;
 		const products=getJson();
+		const file=req.file;
 		const {name,price,discount,category,description,image}=req.body;
+
+		const productToDelete = products.find(product => product.id === id);
+		if (productToDelete.image && productToDelete.image !== "default-image-png") {
+		   const EliminarImagePath = path.join(__dirname, '../../public/images/products', productToDelete.image);
+		   fs.unlinkSync(EliminarImagePath);
+		 }
+
 		const nuevoArray=products.map(producto=>{
 			if (producto.id == id){
 				return {
@@ -74,7 +82,7 @@ const controller = {
 					discount:+discount,
 					category,
 					description: description.trim(),
-					image: image ? image : producto.image
+					image: file ? file.filename  : producto.image
 				}
 			}
 			return producto
@@ -85,9 +93,20 @@ const controller = {
 	},
 
 	// Delete - Delete one product from DB
+
+	
 	destroy : (req, res) => {
 		 id = +req.params.id;
 		 const products=getJson();
+
+		 // para eliminar la imagen 
+		 const productToDelete = products.find(product => product.id === id);
+		 if (productToDelete.image && productToDelete.image !== "default-image-png") {
+			const EliminarImagePath = path.join(__dirname, '../../public/images/products', productToDelete.image);
+			fs.unlinkSync(EliminarImagePath);
+		  }
+
+		// para eliminar el producto del json
 		 productsRestantes= products.filter(product=>product.id !== id)
 		 fs.writeFileSync(productsFilePath,JSON.stringify(productsRestantes),'utf-8')
 		 res.redirect('/products')
