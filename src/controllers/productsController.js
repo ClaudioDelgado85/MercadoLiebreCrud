@@ -68,11 +68,8 @@ const controller = {
 		const {name,price,discount,category,description,image}=req.body;
 
 		const productToDelete = products.find(product => product.id === id);
-		if (productToDelete.image && productToDelete.image !== "default-image-png") {
-		   const EliminarImagePath = path.join(__dirname, '../../public/images/products', productToDelete.image);
-		   fs.unlinkSync(EliminarImagePath);
-		 }
-
+		const EliminarImagePath = path.join(__dirname, '../../public/images/products', productToDelete.image);
+		
 		const nuevoArray=products.map(producto=>{
 			if (producto.id == id){
 				return {
@@ -82,7 +79,7 @@ const controller = {
 					discount:+discount,
 					category,
 					description: description.trim(),
-					image: file ? file.filename  : producto.image
+					image: file ? (fs.unlinkSync(EliminarImagePath),file.filename)  : producto.image
 				}
 			}
 			return producto
